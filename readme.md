@@ -18,8 +18,8 @@ Implemented features:
 
 Features I'm working on: 
     Ability to write a new Post, Fetch all written posts, Fetch their own posts
-    
+
 ## Related
 
 
-[Frontend Codebase](https://github.com/motinxyz/openblog-frontend)
+[Frontend Codebase](https://github.com/motinxyz/open-blog-frontend)
