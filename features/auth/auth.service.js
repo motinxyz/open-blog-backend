@@ -42,4 +42,7 @@ export const handleUserRegistration = async (userData) => {
   await newUser.save();
 
   return { success: true };
+  // The password will be excluded from the returned object because of
+  // `select: false` in the model.
+  // return newUser;
 };

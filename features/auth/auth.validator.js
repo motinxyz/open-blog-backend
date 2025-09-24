@@ -15,13 +15,13 @@ export const validateRegistrationForm = [
     .trim()
     .notEmpty()
     .withMessage("First Name is required")
-    .isString()
+    .isAlpha()
     .withMessage("Name can only contain letters"),
   check("lastName")
     .trim()
     .notEmpty()
     .withMessage("Last Name is required")
-    .isString()
+    .isAlpha()
     .withMessage("Name can only contain letters"),
   check("email")
     .trim()

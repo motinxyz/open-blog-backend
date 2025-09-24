@@ -1,5 +1,6 @@
 import { validationResult } from "express-validator";
 import { handleUserLogin, handleUserRegistration } from "./auth.service.js";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../constants/messages.js";
 
 export const login = async (req, res, next) => {
   const errors = validationResult(req);
@@ -7,7 +8,7 @@ export const login = async (req, res, next) => {
   if (!errors.isEmpty()) {
     console.log(errors.array());
     return res.status(422).json({
-      message: "Invalid data",
+      message: ERROR_MESSAGES.INVALID_INPUT,
       errors: errors.array(),
     });
   }
@@ -21,7 +22,7 @@ export const login = async (req, res, next) => {
     req.session.user = user;
     // req.session.isAuthenticated = true;
     // Respond with success message and user data
-    res.status(200).json({ message: "Login successful", user });
+    res.status(200).json({ message: SUCCESS_MESSAGES.LOGIN_SUCCESSFUL, user });
   } catch (error) {
     // Pass the error to the global error handler in app.js
     next(error);
@@ -41,7 +42,7 @@ export const registerUser = async (req, res, next) => {
   if (!errors.isEmpty()) {
     console.log(errors.array());
     return res.status(422).json({
-      message: "Invalid Inputs",
+      message: ERROR_MESSAGES.INVALID_INPUT,
       errors: errors.array(),
     });
   }
@@ -50,7 +51,10 @@ export const registerUser = async (req, res, next) => {
     const newUser = await handleUserRegistration(req.body);
     res
       .status(201)
-      .json({ message: "User created successfully!", user: newUser });
+      .json({
+        message: SUCCESS_MESSAGES.REGISTRATION_SUCCESSFUL,
+        user: newUser,
+      });
   } catch (error) {
     // Pass any errors to the global error handler in app.js
     next(error);
@@ -60,12 +64,14 @@ export const registerUser = async (req, res, next) => {
 export const logout = (req, res, next) => {
   req.session.destroy((err) => {
     if (err) {
-      const error = new Error("Failed to log out.");
+      const error = new Error(ERROR_MESSAGES.LOGOUT_FAILED);
       error.statusCode = 500;
       return next(error);
     }
     // By default, connect-mongodb-session doesn't remove the cookie.
     res.clearCookie("connect.sid"); // The default cookie name from express-session
-    return res.status(200).json({ message: "Logout successful." });
+    return res
+      .status(200)
+      .json({ message: SUCCESS_MESSAGES.LOGOUT_SUCCESSFUL });
   });
 };

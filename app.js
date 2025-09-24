@@ -7,9 +7,10 @@ import helmet from "helmet";
 
 // local modules
 import { logIncomingRequest } from "./utils/reqLogger.js";
-// import postRouter from "./features/posts/post.routes.js";
+import postRouter from "./features/posts/post.routes.js";
 import authRouter from "./features/auth/auth.routes.js";
 import globalErrorHandler from "./utils/globalErrorHandler.js";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./constants/messages.js";
 
 const app = express();
 const DB_URL = process.env.DB_URL;
@@ -20,13 +21,13 @@ const DB_URL = process.env.DB_URL;
 app.use(helmet());
 
 // Enable CORS for routes
-const allowedOrigins = ["http://localhost:5173"];
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(",");
 const corsOptions = {
   origin: (origin, callback) => {
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error("Not allowed by cors"));
+      callback(new Error(ERROR_MESSAGES.CORS_NOT_ALLOWED));
     }
   },
   credentials: true, // This is the crucial line to add
@@ -65,17 +66,11 @@ app.use(
 // --- Route Mounting ---
 // Health check route
 app.get("/api", (req, res) => {
-  res.status(200).json({ message: "API is running." });
+  res.status(200).json({ message: SUCCESS_MESSAGES.API_RUNNING });
 });
 
-// All API routes will be prefixed with /api
-// e.g., /api/auth/login
 app.use("/api/auth", authRouter);
-// app.use("/api/posts", postRouter); // When you're ready to add post routes
-
-app.get("/api/wiring-test", (req, res, next) => {
-  return res.status(200).json({ passed: true, message: "Wiring works fine!" });
-});
+app.use("/api/posts", postRouter);
 
 // --- Global Error Handling ---
 // This middleware must be last.
