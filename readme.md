@@ -13,10 +13,9 @@ This is the backend of an ongoing blogsite project where everyone can create an 
 I'm using MERN stack to complete the project
 
 Implemented features:
-Auth
+Auth, Ability to Post, See All Posts by everyone in one place
 
 Features I'm working on:
-Ability to write a new Post, Fetch all written posts, Fetch their own posts
 
 ## Related
 

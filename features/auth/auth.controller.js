@@ -30,6 +30,7 @@ export const login = async (req, res, next) => {
 };
 
 export const checkAuthStatus = (req, res, next) => {
+  // console.log("recieved /api/auth/status req")
   if (req.session.isLoggedIn) {
     res.status(200).json({ isAuthenticated: true, user: req.session.user });
   } else {
@@ -68,10 +69,9 @@ export const logout = (req, res, next) => {
       error.statusCode = 500;
       return next(error);
     }
-    // By default, connect-mongodb-session doesn't remove the cookie.
+    // The destroy function is enough to remove the session.
+    // The response should be sent from within its callback.
     res.clearCookie("connect.sid"); // The default cookie name from express-session
-    return res
-      .status(200)
-      .json({ message: SUCCESS_MESSAGES.LOGOUT_SUCCESSFUL });
+    return res.status(200).json({ message: SUCCESS_MESSAGES.LOGOUT_SUCCESSFUL });
   });
 };
